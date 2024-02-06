@@ -1,0 +1,4 @@
+A ADD 5
+a subtract 2
+print a
+b mUlTIPLY 3
