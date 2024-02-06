@@ -15,7 +15,10 @@ private:
 public:
     Operator(float=0, std::string=0);
     Operator(std::shared_ptr<Register>, std::string);
-    ~Operator();
+    ~Operator() = default;
+
+    std::string print();
+
 };
 
 
