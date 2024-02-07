@@ -12,6 +12,7 @@ class Register
 private:
     std::string regName;
     std::vector<std::shared_ptr<Operator>> operations;
+    float value;
 
 public:
     Register(std::string=0);
@@ -19,9 +20,9 @@ public:
     
     void addOperation(std::string, float);
     void addOperation(std::string, std::shared_ptr<Register>);
-
-    std::string print();
-
+    
+    float calculate();
+    float getValue();
 
 };
 

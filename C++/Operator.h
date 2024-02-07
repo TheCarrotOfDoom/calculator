@@ -18,6 +18,7 @@ public:
     ~Operator() = default;
 
     std::string print();
+    float calculate(float&);
 
 };
 
