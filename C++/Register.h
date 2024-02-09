@@ -8,21 +8,20 @@
 class Operator;
 
 class Register
+//  Class that can have operations done to it
 {
 private:
-    std::string regName;
     std::vector<std::shared_ptr<Operator>> operations;
     float value;
 
 public:
-    Register(std::string=0);
+    Register();
     ~Register() = default;
     
     void addOperation(std::string, float);
     void addOperation(std::string, std::shared_ptr<Register>);
     
     float calculate();
-    std::string getRegister();
 
 };
 

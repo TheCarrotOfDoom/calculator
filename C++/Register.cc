@@ -5,28 +5,25 @@
 
 #include <iostream>
 
-Register::Register(std::string regName)
-:regName{regName}, operations{}, value{}
-{
-}
+Register::Register()
+:operations{}, value{}
+{}
 
 
 void Register::addOperation(std::string operation, float value)
+//  Add an operation with a float value as operand
 {
     operations.push_back(std::make_shared<Operator>(value, operation));
 }
 
-void Register::addOperation(std::string operation, std::shared_ptr<Register> regPtr)
+void Register::addOperation(std::string operation, std::shared_ptr<Register> registerPtr)
+//  Add an operation with a register as operand
 {
-    operations.push_back(std::make_shared<Operator>(regPtr, operation));
-}
-
-std::string Register::getRegister()
-{
-    return regName;
+    operations.push_back(std::make_shared<Operator>(registerPtr, operation));
 }
 
 float Register::calculate()
+//  Calculate the current value of the given register
 {
     value = 0;
 
@@ -36,9 +33,3 @@ float Register::calculate()
     }
     return value;
 }
-
-/*
-a add b
-b add 10
-print a
-*/

@@ -5,40 +5,38 @@
 #include <iostream>
 
 Operator::Operator(float value, std::string operation)
-:reg{}, value{value}, operation{operation}
+:registerPtr{}, value{value}, operation{operation}
+{}
+
+Operator::Operator(std::shared_ptr<Register> registerPtr, std::string operation)
+:registerPtr{registerPtr}, value{}, operation{operation}
 {
 }
 
-Operator::Operator(std::shared_ptr<Register> reg, std::string operation)
-:reg{reg}, value{}, operation{operation}
-{
-}
-
-std::string Operator::print()
-{
-    return operation + " " + std::to_string(value);
-}
-
-float Operator::calculate(float& regValue)
+float Operator::calculate(float& registerValue)
 {
     
-    if (reg != nullptr)
+    if (registerPtr != nullptr)
     {
-        value = reg->calculate();
+        value = registerPtr->calculate();
     }
 
     if (operation == "add")
     {
-        regValue += value;
+        registerValue += value;
     }
     else if (operation == "subtract")
     {
-        regValue -= value;
+        registerValue -= value;
     }
     else if (operation == "multiply")
     {
-        regValue *= value;
+        registerValue *= value;
+    }
+    else
+    {
+        throw std::logic_error(">> Invalid operation!");
     }
 
-    return regValue;
+    return registerValue;
 }

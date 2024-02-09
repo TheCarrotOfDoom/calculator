@@ -7,17 +7,17 @@
 class Register;
 
 class Operator
+//  Class that describes an operation
 {
 private:
-    std::shared_ptr<Register> reg;
+    std::shared_ptr<Register> registerPtr;
     float value;
     std::string operation;
 public:
     Operator(float=0, std::string=0);
     Operator(std::shared_ptr<Register>, std::string);
     ~Operator() = default;
-
-    std::string print();
+    
     float calculate(float&);
 
 };

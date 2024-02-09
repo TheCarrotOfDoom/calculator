@@ -11,7 +11,7 @@
 
 using namespace std;
 
-bool isStof(std::string& value); // Checks if value is convertible to float
+bool isConvertibleToFloat(std::string& value); // Checks if value is convertible to float
 
 int main()
 {
@@ -24,46 +24,69 @@ int main()
 
         istringstream line{expression};
         string operation{};
-        string regName{};
-        string value{};
-        string word{};
+        string registerName{};
+        string operand{};
+        string input{};
 
-        line >> word;
+        line >> input;
 
-        if (word == "quit")
+        if (input == "print")
         {
-            break;
-        }
-        else if (word == "print")
-        {
-            line >> regName;
+            line >> registerName;
 
-            cout << Registers[regName]->calculate() << endl;;
-        }
-        else
-        {
-            line >> operation >> value;
-            regName = word;
-            Registers.insert({regName, make_shared<Register>(regName)});
-
-            if (isStof(value))
+            if (Registers.count(registerName) != 0)
+            // If register exists print
             {
-                Registers[regName]->addOperation(operation, stof(value));
+                cout << Registers[registerName]->calculate() << endl;
             }
             else
             {
-                // 'value' is used as a register name to save memory
-                Registers.insert({value, make_shared<Register>(value)});
-                
-                Registers[regName]->addOperation(operation, Registers[value]);
+                std::cout << ">> Register does not exist." << std::endl;
             }
+        }
+        else if (input == "quit")
+        {
+            break;
+        }
+        else if (isConvertibleToFloat(input))
+        {
+            std::cout << ">> Invalid register name." << std::endl;
+        }
+        else
+        {
+            line >> operation >> operand;
+
+            registerName = input;
+
+            Registers.insert({registerName, make_shared<Register>()});
+            try
+            {
+                if (isConvertibleToFloat(operand))
+                {
+                    // 'operand' is a float
+                    Registers[registerName]->addOperation(operation, stof(operand));
+                }
+                else
+                {
+                    //  'operand' is a register, add to Register
+                    //  map if it doesn't exist
+                    Registers.insert({operand, make_shared<Register>()});
+                    
+                    Registers[registerName]->addOperation(operation, Registers[operand]);
+                }
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            
         }
     }
 }
 
-bool isStof(std::string& value)
-/*  Check if value is convertible to float.
-    If convertible return True, else return False  */
+bool isConvertibleToFloat(std::string& value)
+//  Check if value is convertible to float.
+//  If convertible return True, else return False
 {
     std::istringstream iss(value);
     float fValue;
