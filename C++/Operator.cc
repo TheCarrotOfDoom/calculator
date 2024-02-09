@@ -24,15 +24,11 @@ float Operator::calculate(float& regValue)
     
     if (reg != nullptr)
     {
-        std::cout << operation << std::endl;
-
         value = reg->calculate();
     }
 
     if (operation == "add")
     {
-        std::cout << value << std::endl;
-
         regValue += value;
     }
     else if (operation == "subtract")

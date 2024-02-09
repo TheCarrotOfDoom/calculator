@@ -22,7 +22,7 @@ public:
     void addOperation(std::string, std::shared_ptr<Register>);
     
     float calculate();
-    float getValue();
+    std::string getRegister();
 
 };
 

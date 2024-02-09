@@ -21,14 +21,14 @@ void Register::addOperation(std::string operation, std::shared_ptr<Register> reg
     operations.push_back(std::make_shared<Operator>(regPtr, operation));
 }
 
-float Register::getValue()
+std::string Register::getRegister()
 {
-    return value;
+    return regName;
 }
 
 float Register::calculate()
 {
-    std::cout << value << std::endl;
+    value = 0;
 
     for (auto& op : operations)
     {

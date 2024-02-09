@@ -54,8 +54,8 @@ int main()
             {
                 // 'value' is used as a register name to save memory
                 Registers.insert({value, make_shared<Register>(value)});
-
-                Registers[regName]->addOperation(operation, Registers[regName]);
+                
+                Registers[regName]->addOperation(operation, Registers[value]);
             }
         }
     }
