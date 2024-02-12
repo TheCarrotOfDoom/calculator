@@ -17,16 +17,17 @@ void calculator(std::istream&); // Calculator function
 
 int main(int argc, char* argv[])
 {
-    if (argc)
+    // Check if input is from file
+    if (argc > 1)
     {
         std::ifstream inputFile(argv[1]);
-        if (!inputFile.is_open()) {
+        if (!inputFile.is_open()) {     // Check if file can be opened
             std::cout << ">> Error opening input file." << std::endl;
             return 1;
         }
         calculator(inputFile);
     }
-    else
+    else // Use standard input stream
     {
         calculator(std::cin);
     }
@@ -54,8 +55,8 @@ void calculator(std::istream& input)
         {
             line >> registerName;
 
+            // If register exists print register value
             if (Registers.count(registerName))
-            // If register exists print
             {
                 std::cout << Registers[registerName]->calculate() << std::endl;
             }
@@ -66,9 +67,9 @@ void calculator(std::istream& input)
         }
         else if (firstWord == "quit")
         {
-            break;
+            break; // Exit program
         }
-        else if (isConvertibleToFloat(firstWord))
+        else if (isConvertibleToFloat(firstWord)) // Only accept alphanumeric register names
         {
             std::cout << ">> Invalid register name." << std::endl;
         }
@@ -77,7 +78,7 @@ void calculator(std::istream& input)
             line >> operatorStr >> operand;
             registerName = firstWord;
 
-            // Check if operationStr is a valid operator
+            // Check if operatorStr is a valid operator
             bool validOperator = std::any_of(validOperators.begin(), validOperators.end(),
                 [operatorStr](std::string str){
                     return str == operatorStr;
@@ -88,10 +89,11 @@ void calculator(std::istream& input)
                 std::cout << ">> Invalid Operator." << std::endl;
                 continue;
             }
-            else if(registerName == operand || (Registers.count(operand)
-                    && Registers[operand]->isDependent(operand)))
+            else if(registerName == operand || (Registers.count(operand) // Check if operation creates circular dependency
+                    && Registers[operand]->isCircularDependent(operand)))
             {
-                std::cout << ">> Invalid Operand, circular dependency." << std::endl;
+                std::cout << ">> Invalid Operand: circular dependency from "
+                          << line.str() << "."<< std::endl;
                 continue;
             }
         
@@ -99,13 +101,13 @@ void calculator(std::istream& input)
         
             if (isConvertibleToFloat(operand))
             {
-                // 'operand' is a float
+                // operand is a float
                 Registers[registerName]->addOperation(operatorStr, stof(operand));
             }
             else
             {
-                //  'operand' is a register, add to Register
-                //  map if it doesn't exist
+                /*  operand is a register, add to map 'Registers'
+                    if it doesn't exist */
                 Registers.insert({operand, std::make_shared<Register>(operand)});
                 
                 Registers[registerName]->addOperation(operatorStr, Registers[operand]);

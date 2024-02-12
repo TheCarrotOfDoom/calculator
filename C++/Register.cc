@@ -32,7 +32,8 @@ float Register::calculate()
     return value;
 }
 
-bool Register::isDependent(std::string operand)
+bool Register::isCircularDependent(std::string operand)
+// Check if current register is dependent on itself
 {
     for (const auto& op : operations)
     {
@@ -44,7 +45,7 @@ bool Register::isDependent(std::string operand)
             }
             else
             {
-                op->getRegister()->isDependent(operand);
+                op->getRegister()->isCircularDependent(operand);
             }
         }
     }

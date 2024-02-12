@@ -13,8 +13,9 @@ Operation::Operation(std::shared_ptr<Register> registerPtr, std::string operator
 }
 
 float Operation::calculate(float& registerValue)
+// Calculate result of operation
 {
-    
+    // Check if operand is a register
     if (getRegister() != nullptr)
     {
         value = registerPtr->calculate();
