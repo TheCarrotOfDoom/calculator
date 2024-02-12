@@ -6,19 +6,39 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include <fstream>
 
 #include "Register.h"
 #include "Operation.h"
 
-bool isConvertibleToFloat(std::string& value); // Checks if value is convertible to float
+bool isConvertibleToFloat(std::string&); // Checks if value is convertible to float
 
-int main()
+void calculator(std::istream&); // Calculator function
+
+int main(int argc, char* argv[])
+{
+    if (argc)
+    {
+        std::ifstream inputFile(argv[1]);
+        if (!inputFile.is_open()) {
+            std::cout << ">> Error opening input file." << std::endl;
+            return 1;
+        }
+        calculator(inputFile);
+    }
+    else
+    {
+        calculator(std::cin);
+    }
+}
+
+void calculator(std::istream& input)
 {
     std::string expression{};
     std::map<std::string, std::shared_ptr<Register>> Registers{};
     std::vector<std::string> validOperators {"add", "subtract", "multiply"};
 
-    while (getline(std::cin, expression))
+    while (getline(input, expression))
     {
         transform(expression.begin(), expression.end(), expression.begin(), ::tolower);
 
@@ -26,11 +46,11 @@ int main()
         std::string operatorStr{};
         std::string registerName{};
         std::string operand{};
-        std::string input{};
+        std::string firstWord{};
 
-        line >> input;
+        line >> firstWord;
 
-        if (input == "print")
+        if (firstWord == "print")
         {
             line >> registerName;
 
@@ -44,18 +64,18 @@ int main()
                 std::cout << ">> Register does not exist." << std::endl;
             }
         }
-        else if (input == "quit")
+        else if (firstWord == "quit")
         {
             break;
         }
-        else if (isConvertibleToFloat(input))
+        else if (isConvertibleToFloat(firstWord))
         {
             std::cout << ">> Invalid register name." << std::endl;
         }
         else
         {
             line >> operatorStr >> operand;
-            registerName = input;
+            registerName = firstWord;
 
             // Check if operationStr is a valid operator
             bool validOperator = std::any_of(validOperators.begin(), validOperators.end(),
