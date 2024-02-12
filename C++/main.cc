@@ -1,32 +1,32 @@
 
-#include <string>
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <map>
 #include <memory>
 #include <algorithm>
+#include <vector>
 
 #include "Register.h"
-#include "Operator.h"
-
-using namespace std;
+#include "Operation.h"
 
 bool isConvertibleToFloat(std::string& value); // Checks if value is convertible to float
 
 int main()
 {
-    string expression{};
-    map<string, shared_ptr<Register>> Registers{};
+    std::string expression{};
+    std::map<std::string, std::shared_ptr<Register>> Registers{};
+    std::vector<std::string> validOperators {"add", "subtract", "multiply"};
 
-    while (getline(cin, expression))
+    while (getline(std::cin, expression))
     {
         transform(expression.begin(), expression.end(), expression.begin(), ::tolower);
 
-        istringstream line{expression};
-        string operation{};
-        string registerName{};
-        string operand{};
-        string input{};
+        std::istringstream line{expression};
+        std::string operatorStr{};
+        std::string registerName{};
+        std::string operand{};
+        std::string input{};
 
         line >> input;
 
@@ -34,10 +34,10 @@ int main()
         {
             line >> registerName;
 
-            if (Registers.count(registerName) != 0)
+            if (Registers.count(registerName))
             // If register exists print
             {
-                cout << Registers[registerName]->calculate() << endl;
+                std::cout << Registers[registerName]->calculate() << std::endl;
             }
             else
             {
@@ -54,32 +54,41 @@ int main()
         }
         else
         {
-            line >> operation >> operand;
-
+            line >> operatorStr >> operand;
             registerName = input;
 
-            Registers.insert({registerName, make_shared<Register>()});
-            try
+            // Check if operationStr is a valid operator
+            bool validOperator = std::any_of(validOperators.begin(), validOperators.end(),
+                [operatorStr](std::string str){
+                    return str == operatorStr;
+                });
+
+            if (!validOperator)
             {
-                if (isConvertibleToFloat(operand))
-                {
-                    // 'operand' is a float
-                    Registers[registerName]->addOperation(operation, stof(operand));
-                }
-                else
-                {
-                    //  'operand' is a register, add to Register
-                    //  map if it doesn't exist
-                    Registers.insert({operand, make_shared<Register>()});
-                    
-                    Registers[registerName]->addOperation(operation, Registers[operand]);
-                }
+                std::cout << ">> Invalid Operator." << std::endl;
+                continue;
             }
-            catch(const std::exception& e)
+            else if(Registers.count(operand) && Registers[operand]->isDependent(operand))
             {
-                std::cerr << e.what() << '\n';
+                std::cout << ">> Invalid Operand, circular dependency." << std::endl;
+                continue;
             }
-            
+        
+            Registers.insert({registerName, std::make_shared<Register>(registerName)});
+        
+            if (isConvertibleToFloat(operand))
+            {
+                // 'operand' is a float
+                Registers[registerName]->addOperation(operatorStr, stof(operand));
+            }
+            else
+            {
+                //  'operand' is a register, add to Register
+                //  map if it doesn't exist
+                Registers.insert({operand, std::make_shared<Register>(operand)});
+                
+                Registers[registerName]->addOperation(operatorStr, Registers[operand]);
+            }            
         }
     }
 }
