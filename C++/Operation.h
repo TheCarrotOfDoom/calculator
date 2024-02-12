@@ -23,5 +23,4 @@ public:
     std::shared_ptr<Register> getRegister();
 };
 
-
 #endif //OPERATOR_H

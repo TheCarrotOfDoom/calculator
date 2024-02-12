@@ -68,7 +68,8 @@ int main()
                 std::cout << ">> Invalid Operator." << std::endl;
                 continue;
             }
-            else if(Registers.count(operand) && Registers[operand]->isDependent(operand))
+            else if(registerName == operand || (Registers.count(operand)
+                    && Registers[operand]->isDependent(operand)))
             {
                 std::cout << ">> Invalid Operand, circular dependency." << std::endl;
                 continue;

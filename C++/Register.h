@@ -27,9 +27,4 @@ public:
 
 };
 
-
-
-
-
-
 #endif //REG_H

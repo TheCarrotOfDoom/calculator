@@ -3,8 +3,6 @@
 #include "Register.h"
 #include "Operation.h"
 
-#include <iostream>
-
 Register::Register(std::string name)
 :operations{}, value{}, name{name}
 {}
@@ -36,20 +34,17 @@ float Register::calculate()
 
 bool Register::isDependent(std::string operand)
 {
-    std::cout << name << std::endl;
     for (const auto& op : operations)
     {
         if (op->getRegister() != nullptr)
         {
             if (name == operand)
             {
-                std::cout << "true" << std::endl;
                 return true;
             }
             else
             {
                 op->getRegister()->isDependent(operand);
-                std::cout << "next" << std::endl;
             }
         }
     }

@@ -2,8 +2,6 @@
 #include "Operation.h"
 #include "Register.h"
 
-#include <iostream>
-
 Operation::Operation(float value, std::string operatorStr)
 :registerPtr{}, value{value}, operatorStr{operatorStr}
 {
